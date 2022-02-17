@@ -1,9 +1,10 @@
-import React , {useState} from 'react';
+import React , {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import Content from  './components/content';
 import Header from  './components/header';
 import Footer from './components/footer'
 import AddItem from './components/addItem';
+import SearchItem from './components/searchItem';
 export default function App(){
 
     const [items, setItems] = useState([
@@ -23,6 +24,10 @@ export default function App(){
           checked: false,
         },
       ]);
+
+      useEffect(()=>{
+        console.log("running after render")
+      },[items])
     
       const handleChange = (id) => {
         const listItems = items.map((item) =>
@@ -37,6 +42,7 @@ export default function App(){
       };
 
 const [newItem,setNewItem] = useState('');
+const [search,setSearch]=useState('');
 
 const addItem = (itemName)=>{
   const id = items.length? items[items.length-1].id +1 : 1;
@@ -58,9 +64,13 @@ const handleSubmit = (e)=>{
     return(
         <div>
             <Header title={"shopping List"} />
+            <SearchItem 
+            search= {search}
+            setSearch = {setSearch}
+            />
             <AddItem  newItem = {newItem} setNewItem={setNewItem} handleSubmit={handleSubmit} />
             <Content
-            items = {items}
+            items = {items.filter(item=>((item.itemName).toLowerCase()).includes(search.toLowerCase()))}
             handleDelete={handleDelete}
             handleChange ={handleChange}
             />
